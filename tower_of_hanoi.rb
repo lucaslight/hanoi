@@ -30,31 +30,6 @@ class TowerOfHanoi
   def won?
     @towers['B'].length == @disks || @towers['C'].length == @disks
   end
-  # def render
-  #   puts "Tower of Hanoi"
-
-  #   max_height = @towers['A'].size
-  #   initial_height = @disks
-
-  #   initial_height.downto(1) do |level|
-  #     @towers.each do |tower, disks|
-  #       disk = disks[level - 1] || 0
-  #       disk_representation = '*' * (disk - 1) + '*' + '|' + '*' * (disk - 1)
-
-  #       if level > max_height
-  #         print " " * (@disks * 2 + 1)
-  #       else
-  #         print disk_representation.center(@disks * 2 + 1)
-  #       end
-
-  #       print "  "
-  #     end
-  #     puts
-  #   end
-
-  #   puts "a - Left Tower | s - Middle Tower | d - Right Tower | h - Hint | q - Quit"
-  # end
-
 
   def render
     puts "Tower of Hanoi"
@@ -71,11 +46,13 @@ class TowerOfHanoi
           print (" " * @disks) + "|" + (" " * @disks)
         else
           # print " " * ((@disks - disk) / 2)
-          print " " * (@disks)
+        require 'pry'; binding.pry
+
+          print " " * (@disks - disk_size)
           print '*' * disk_size
           print '|'
           print '*' * disk_size
-          print " " * (@disks - disk)
+          print " " * (@disks - disk_size)
           # print " " * ((@disks - disk) / 2)
         end
 
