@@ -46,13 +46,13 @@ class TowerOfHanoi
           print (" " * @disks) + "|" + (" " * @disks)
         else
           # print " " * ((@disks - disk) / 2)
-        require 'pry'; binding.pry
+        # require 'pry'; binding.pry
 
-          print " " * (@disks - disk_size)
-          print '*' * disk_size
+          print " " * (@disks - disk)
+          print '*' * disk
           print '|'
-          print '*' * disk_size
-          print " " * (@disks - disk_size)
+          print '*' * disk
+          print " " * (@disks - disk)
           # print " " * ((@disks - disk) / 2)
         end
 
