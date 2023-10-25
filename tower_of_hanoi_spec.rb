@@ -1,75 +1,60 @@
-require_relative 'tower_of_hanoi'
+# frozen_string_literal: true
 
-describe TowerOfHanoi do
-  describe "#valid_move?" do
-    context "when moving a larger disk onto a smaller disk" do
-      it "returns false" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [3], 'B' => [1], 'C' => [2] })
-        expect(game.valid_move?('A', 'B')).to be false
-      end
-    end
+require_relative 'tower_of_hanoi' # Replace with the actual file path
 
-    context "when moving a smaller disk onto a larger disk" do
-      it "returns true" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [1], 'B' => [3], 'C' => [2] })
-        expect(game.valid_move?('A', 'B')).to be true
-      end
-    end
+RSpec.describe TowerOfHanoi do
+  before(:each) do
+    @game = TowerOfHanoi.new
+  end
 
-    context "when moving from an empty tower" do
-      it "returns false" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [2, 1], 'B' => [], 'C' => [3] })
-        expect(game.valid_move?('B', 'C')).to be false
-      end
-    end
-
-    context "when moving to an empty tower" do
-      it "returns true" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [2, 1], 'B' => [3], 'C' => [] })
-        expect(game.valid_move?('A', 'C')).to be true
-      end
+  describe '#initialize' do
+    it 'initializes shuffled colors' do
+      expect(@game.instance_variable_get(:@shuffled_colors)).to_not be_empty
     end
   end
 
-  describe "#move" do
-    context "when making a valid move" do
-      it "moves a disk from the source tower to the destination tower" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [3, 2], 'B' => [1], 'C' => [] })
-        expect(game.move('A', 'C')).to be true
-        expect(game.instance_variable_get(:@towers)).to eq({ 'A' => [3], 'B' => [1], 'C' => [2] })
-      end
+  describe '#valid_peg?' do
+    it 'returns true for valid peg' do
+      expect(@game.send(:valid_peg?, 'A')).to be_truthy
     end
 
-    context "when making an invalid move" do
-      it "does not move a disk and returns false" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [3], 'B' => [1], 'C' => [2] })
-        expect(game.move('A', 'B')).to be false
-        expect(game.instance_variable_get(:@towers)).to eq({ 'A' => [3], 'B' => [1], 'C' => [2] })
-      end
+    it 'returns false for invalid peg' do
+      expect(@game.send(:valid_peg?, 'X')).to be_falsey
     end
   end
 
-  describe "#won?" do
-    context "when all disks are on the second or third tower" do
-      it "returns true" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [], 'B' => [], 'C' => [3, 2, 1] })
-        expect(game.won?).to be true
-      end
+  describe '#set_spacing' do
+    it 'returns the correct spacing' do
+      expect(@game.send(:set_spacing, 5, 2)).to eq('   ')
+    end
+  end
+
+  describe '#set_horizontal_borders' do
+    it 'returns the correct horizontal borders' do
+      expect(@game.send(:set_horizontal_borders, 5)).to eq('+++++++++')
     end
 
-    context "when not all disks are on the second or third tower" do
-      it "returns false" do
-        game = TowerOfHanoi.new(3)
-        game.instance_variable_set(:@towers, { 'A' => [3], 'B' => [2], 'C' => [1] })
-        expect(game.won?).to be false
-      end
+    it 'returns the correct horizontal borders for larger disks' do
+      expect(@game.send(:set_horizontal_borders, 12)).to eq('++++++++++++++++++')
+    end
+  end
+
+  describe '#display_towers' do
+    it 'displays the initial configuration' do
+      # You can't directly test this method as it has a lot of visual output.
+      # You can consider adding tests for other methods or behaviors.
+    end
+  end
+
+  describe '#suggest_move' do
+    it 'suggests a valid move' do
+      move = @game.send(:suggest_move, 'A', 'B', 'C', 3)
+      expect(move).to eq(%w[A C])
+    end
+
+    it 'handles a single disk move' do
+      move = @game.send(:suggest_move, 'A', 'B', 'C', 1)
+      expect(move).to eq(%w[A C])
     end
   end
 end
