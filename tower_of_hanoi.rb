@@ -9,7 +9,8 @@ class TowerOfHanoi
       light_black light_red light_green light_yellow light_blue
       light_magenta light_cyan light_white
     ]
-
+    @destination_peg = 'C'
+    @towers = { 'A' => [], 'B' => [], 'C' => [] }
     @shuffled_colors = @colors.shuffle
   end
 
@@ -17,24 +18,17 @@ class TowerOfHanoi
     puts 'Welcome to the Tower of Hanoi Game!'
     num_disks = get_user_input('Enter the number of disks: ').to_i
 
-    if num_disks <= 0
-      puts 'Please enter a positive number of disks.'
-      return
-    end
-
-    @destination_peg = 'C'
-    @towers = { 'A' => [], 'B' => [], 'C' => [] }
-    @towers['A'] = (1..num_disks).to_a.reverse
-
+    game_setup(num_disks)
     puts 'The initial configuration of the Tower of Hanoi is complete.'
+
     display_towers(num_disks)
 
     loop do
-      move = get_user_input("Enter the move (e.g., 'ab' or 'ca'), 'h' for hint or 'q' to quit: ").upcase
-      break if move == 'Q'
+      user_input = get_user_input("Enter the move (e.g., 'ab' or 'ca'), 'h' for hint or 'q' to quit: ").upcase
+      break if quit?(user_input)
 
-      if move == 'H'
-        hint = suggest_move('A', 'B', 'C')
+      if hint?(user_input)
+        hint = suggest_move()
         if hint
           puts "Hint: Move from peg #{hint[0]} to peg #{hint[1]}"
         else
@@ -43,9 +37,9 @@ class TowerOfHanoi
         next
       end
 
-      if move.length == 2
-        from_peg = move[0]
-        to_peg = move[1]
+      if user_input.length == 2
+        from_peg = user_input[0]
+        to_peg = user_input[1]
 
         if valid_peg?(from_peg) && valid_peg?(to_peg)
           if @towers[from_peg].empty?
@@ -55,12 +49,7 @@ class TowerOfHanoi
           else
             @towers[to_peg] << @towers[from_peg].pop
             display_towers(num_disks)
-
-            if @towers[@destination_peg].length == num_disks
-              # puts "Congratulations! You've completed the Tower of Hanoi game."
-              animate_winning_message("Congratulations! You've completed the Tower of Hanoi game.")
-              break
-            end
+            winning_message unless !winning_turn?(num_disks)
           end
         else
           puts 'Invalid source or target peg. Please enter A, B, or C.'
@@ -69,12 +58,40 @@ class TowerOfHanoi
         puts "Invalid input format. Please enter a move like 'ab' or 'ca'."
       end
     end
-
-    play_again = get_user_input('Do you want to play again? (Y/N): ')
-    play if play_again == 'Y'
+    # setup_play_again if play_again? unless !winning_turn?(num_disks)
+    setup_play_again if play_again?
   end
 
   private
+
+  def hint?(user_input)
+    user_input == 'H'
+  end
+
+  def quit?(user_input)
+    user_input == 'Q'
+  end
+
+  def play_again?
+    play_again = get_user_input('Do you want to play again? (Y/N): ')
+    play_again == 'Y'
+    
+  end
+  def setup_play_again
+    @towers = { 'A' => [], 'B' => [], 'C' => [] }
+    play
+  end
+
+  def game_setup(disks)
+    if disks <= 0
+      puts 'Please enter a positive number of disks.'
+      play
+    elsif disks > 15
+      puts 'Please enter a lower number of disks.'
+      play
+    end
+    @towers['A'] = (1..disks).to_a.reverse
+  end
 
   def move_disk(source, target)
     puts "Move a disk from #{source} to #{target}"
@@ -82,6 +99,11 @@ class TowerOfHanoi
 
   def valid_peg?(peg)
     %w[A B C].include?(peg)
+  end
+
+  def winning_turn?(disks)
+    @towers[@destination_peg].length == disks
+      # puts "Congratulations! You've completed the Tower of Hanoi game."
   end
 
   def set_spacing(disks, int = 0)
@@ -122,14 +144,15 @@ class TowerOfHanoi
     puts "#{horizontal_borders}  #{horizontal_borders}  #{horizontal_borders}"
   end
 
-  def animate_winning_message(message)
+  def winning_message
+    message = "Congratulations! You've completed the Tower of Hanoi game."
     colors = %i[red yellow green blue magenta cyan white]
 
     10.times do
       system('clear') || system('cls')
       rainbow_message = message.colorize(colors.sample)
       puts rainbow_message
-      sleep(2)
+      sleep(0.3)
     end
   end
 
@@ -138,7 +161,7 @@ class TowerOfHanoi
     gets.chomp.upcase
   end
 
-  def suggest_move(source_peg, auxiliary_peg, target_peg, num_disks = @towers['A'].length)
+  def suggest_move(source_peg = 'A', auxiliary_peg = 'B', target_peg = 'C', num_disks = @towers['A'].length)
     return source_peg, target_peg if num_disks == 1
 
     move = suggest_move(source_peg, target_peg, auxiliary_peg, num_disks - 1)

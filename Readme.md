@@ -11,10 +11,11 @@ Once you have Ruby installed, follow these steps to run the game:
 1. Clone or download this repository to your computer.
 2. Open your terminal or command prompt.
 3. Navigate to the directory where you've placed the game files.
-4. Run the game by executing the following command:
-    `$ ruby tower_of_hanoi.rb`
-5. Install gems by executing the following command:
+4. Install gems by executing the following command:
     `$ bundle install`
+
+5. Run the game by executing the following command:
+    `$ ruby tower_of_hanoi.rb`
 
 Follow the on-screen instructions to play the game. You'll be prompted to enter the number of disks, make moves, get hints, and more!
 
