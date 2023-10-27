@@ -33,6 +33,10 @@ Follow the on-screen instructions to play the game. You'll be prompted to enter 
 - A larger disk cannot be placed on top of a smaller disk.
 - You can only move the top disk from one peg to another peg or an empty peg.
 
+## Screenshots
+![tower_of_hanoi_5_disks_Screenshot](screenshots/tower_of_hanoi_5_disks_Screenshot.png)
+![tower_of_hanoi_15_disks_Screenshot](screenshots/tower_of_hanoi_15_disks_Screenshot.png)
+
 ## Contributors
 
 - [Lucas](https://github.com/lucaslight) - The game developer

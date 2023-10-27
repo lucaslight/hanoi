@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'tower_of_hanoi' # Replace with the actual file path
+require_relative '../app/tower_of_hanoi'
 
 RSpec.describe TowerOfHanoi do
   before(:each) do
